@@ -6,7 +6,6 @@ from aiogram.types import Message
 
 from sqlalchemy.exc import NoResultFound
 
-from src.bot.main import dp
 from src.database.facade import dao
 
 
@@ -15,13 +14,11 @@ class ConsumerAuthState(StatesGroup):
     waiting_for_password = State()
 
 
-@dp.message(Command("auth"))
-async def command_auth_handler(message: Message, state: FSMContext) -> None:
+async def command_auth(message: Message, state: FSMContext) -> None:
     await message.answer(f"Enter {html.bold("Meduza")} account's username:")
     await state.set_state(ConsumerAuthState.waiting_for_username)
 
 
-@dp.message(ConsumerAuthState.waiting_for_username)
 async def process_username(message: Message, state: FSMContext):
     try:
         consumer = await dao.consumer.retrieve_where(username=message.text)
@@ -32,7 +29,6 @@ async def process_username(message: Message, state: FSMContext):
         await message.answer('Invalid username.')
 
 
-@dp.message(ConsumerAuthState.waiting_for_password)
 async def process_password(message: Message, state: FSMContext):
     def verify_password(stored_hash: str, pass_to_check: str) -> bool:
         return pass_to_check == stored_hash

@@ -1,10 +1,3 @@
 {
-    "reg_sessions": [
-        {
-            "phone_number": "37444190264",
-            "telegram_id": 7472717164,
-            "conf_code_hash": "765ae1ed8ea1b0b5fe",
-            "session": "1ApWapzMBu41OLSjZFrGYG517Bf0zCjprcre6qrij4uwBpnoiGu0qiA0F2o6DPpoTaL9Qcvd5jRt4VJeNmQIyTZ36TQDQpyJD4uSgk7E6Ch-ZwGMXY4rl8UyIxDLTqfUKx5Qt_fYPwXzyNhpi6dMqmiv8eKDDKUIawSPpgrs8ObcEtWpr-K_OWImQk2B3N8wmF1HUjVfekz-9f2tYYjHk31BrQdoZzoD00yGgm1KH2PsvZH2lu4yonc8U64ea6TSfbJI_fw01oGVkXs_DzrmdHWOBtOS-4rImpRjpc8-FHxNVdN3CPuh6pB1FK8CsGfyd-cjMjuIp3nZB0JwK2bpIgAevalPmim0="
-        }
-    ]
+    "reg_sessions": []
 }

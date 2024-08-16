@@ -4,15 +4,48 @@ import sys
 from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from sqlalchemy.exc import NoResultFound
 
 from src.bot.config import BOT_TOKEN
+
+from src.bot.consumer_commands.filtration_actions import command_fromuser, command_contains, command_startswith
+from src.bot.consumer_commands.filtration_actions import command_actions, command_fromchat
+
+from src.bot.consumer_commands.in_bot_auth import ConsumerAuthState, process_username
+from src.bot.consumer_commands.in_bot_auth import command_auth, process_password
+
+from src.bot.porducer_commands.register_producer import command_register, handle_prod_contact
+from src.bot.porducer_commands.register_producer import process_conf_code, ProducerRegisterState
+
 from src.database.facade import dao
 
 dp = Dispatcher()
+
+# # Registration of Consumer - Related commands. # #
+
+# Message filtration actions.
+dp.message.register(command_actions, Command("actions"))
+dp.message.register(command_startswith, Command("startswith"))
+dp.message.register(command_contains, Command("contains"))
+dp.message.register(command_fromuser, Command("fromuser"))
+dp.message.register(command_fromchat, Command("fromchat"))
+
+# Consumer authentication
+dp.message.register(command_auth, Command("auth"))
+dp.message.register(process_username, ConsumerAuthState.waiting_for_username)
+dp.message.register(process_password, ConsumerAuthState.waiting_for_username)
+dp.message.register(command_startswith, Command("startswith"))
+dp.message.register(command_contains, Command("contains"))
+
+# # Registration of Producer - Related commands. # #
+
+# Registration of Producer.
+dp.message.register(command_register, Command("register"))
+dp.message.register(handle_prod_contact, lambda message: message.contact is not None)
+dp.message.register(process_conf_code, ProducerRegisterState.waiting_for_conf_code)
 
 
 @dp.message(CommandStart())

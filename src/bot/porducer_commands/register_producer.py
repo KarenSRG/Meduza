@@ -1,12 +1,10 @@
 from aiogram import html
 
-from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
 
 from src.bot.api_actions import init_producer_registration, confirm_producer_registration
-from src.bot.main import dp
 
 from src.database.facade import dao
 
@@ -18,8 +16,7 @@ class ProducerRegisterState(StatesGroup):
     waiting_for_conf_code = State()
 
 
-@dp.message(Command("register"))
-async def command_register_handler(message: Message, state: FSMContext):
+async def command_register(message: Message, state: FSMContext):
     button_phone = [KeyboardButton(text='Share phone number', request_contact=True)]
     keyboard = ReplyKeyboardMarkup(keyboard=[button_phone], resize_keyboard=True)
 
@@ -27,8 +24,7 @@ async def command_register_handler(message: Message, state: FSMContext):
     await state.set_state(ProducerRegisterState.waiting_for_contact)
 
 
-@dp.message(lambda message: message.contact is not None)
-async def handle_contact(message: Message, state: FSMContext):
+async def handle_prod_contact(message: Message, state: FSMContext):
     current_state = await state.get_state()
     telegram_id = message.from_user.id
     phone_number = message.contact.phone_number
@@ -62,7 +58,6 @@ def parse_conf_code(conf_code: str) -> str:
     return result
 
 
-@dp.message(ProducerRegisterState.waiting_for_conf_code)
 async def process_conf_code(message: Message, state: FSMContext):
     conf_code = parse_conf_code(message.text)
 
